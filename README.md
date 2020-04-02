@@ -23,6 +23,13 @@ apk add openrc
 
 **Note**
 * No more than 5 servers per datacenter
+* Get key ```curl http://127.0.0.1:8500/v1/kv/traefik/consul/```
+* Put key (no data/null) ```curl --request PUT http://127.0.0.1:8500/v1/kv/traefik/consul/```
+* Put key (with data/json) ```curl --request PUT http://127.0.0.1:8500/v1/kv/traefik/consul/watch -H 'Content-Type: application/json' -d 'true'```
+
+**Firewall rules/ports for master node**
+* ```sudo ufw allow from 10.0.0.0/16 to any port 8500 proto tcp``` 8501 for https
+* ```sudo ufw allow from 10.0.0.0/16 to any port 8300 proto tcp```
 
 **Master Node**
 ```
