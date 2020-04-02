@@ -1,7 +1,39 @@
 version: "3"
 services:
+  traefik_init:
+    image: traefik:v1.7
+    command:
+      - "storeconfig"
+      - "--api"
+      - "--entrypoints=Name:http Address::80 Redirect.EntryPoint:https"
+      - "--entrypoints=Name:https Address::443 TLS"
+      - "--defaultentrypoints=http,https"
+      - "--acme"
+      - "--acme.storage=traefik/acme/account"
+      - "--acme.entryPoint=https"
+      - "--acme.httpChallenge.entryPoint=http"
+      - "--acme.onHostRule=true"
+      - "--acme.onDemand=false"
+      - "--acme.email=foobar@example.com"
+      - "--docker"
+      - "--docker.swarmMode"
+      - "--docker.domain=example.com"
+      - "--docker.watch"
+      - "--consul"
+      - "--consul.endpoint=consul:8500"
+      - "--consul.prefix=traefik"
+    networks:
+      - traefik
+    deploy:
+      restart_policy:
+        condition: on-failure
+    depends_on:
+      - consul  
   traefik:
     image: traefik:v2.2
+    depends_on:
+      - traefik_init
+      - consul
     command:
       - "--api"
       - "--api.insecure=true"
