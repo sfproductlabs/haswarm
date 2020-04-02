@@ -64,7 +64,7 @@ services:
   consul:
     hostname: consul
     image: consul
-    command: sh #agent -server -bootstrap-expect=1
+    command: agent -server -bootstrap-expect=1
     volumes:
       - consul-data:/consul/data
     environment:
