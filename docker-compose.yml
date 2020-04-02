@@ -1,23 +1,15 @@
 version: "3"
 services:
   traefik:
-    image: traefik:<stable v1.7 from https://hub.docker.com/_/traefik>
+    image: traefik:v2.2
     command:
       - "--api"
-      - "--entrypoints=Name:http Address::80 Redirect.EntryPoint:https"
-      - "--entrypoints=Name:https Address::443 TLS"
-      - "--defaultentrypoints=http,https"
-      - "--acme"
-      - "--acme.storage=/etc/traefik/acme/acme.json"
-      - "--acme.entryPoint=https"
-      - "--acme.httpChallenge.entryPoint=http"
-      - "--acme.onHostRule=true"
-      - "--acme.onDemand=false"
-      - "--acme.email=contact@mydomain.ca"
-      - "--docker"
-      - "--docker.swarmMode"
-      - "--docker.domain=mydomain.ca"
-      - "--docker.watch"
+      - "--api.insecure=true"
+      - "--api.dashboard=true"
+      - "--providers.consul"
+      - "--providers.docker"
+      - "--providers.docker.swarmMode=true"
+      - "--providers.docker.endpoint=unix:///var/run/docker.sock"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
     networks:
@@ -43,6 +35,32 @@ services:
         delay: 10s
       restart_policy:
         condition: on-failure
+  consul:
+    image: consul
+    command: agent -server -bootstrap-expect=1
+    volumes:
+      - consul-data:/consul/data
+    environment:
+      - CONSUL_LOCAL_CONFIG={"datacenter":"hetzner","server":true}
+      - CONSUL_BIND_INTERFACE=eth0
+      - CONSUL_CLIENT_INTERFACE=eth0
+    deploy:
+      replicas: 1
+      placement:
+        constraints:
+          - node.role == manager
+      restart_policy:
+        condition: on-failure
+    networks:
+      - traefik
+  whoami:
+    # A container that exposes an API to show its IP address
+    image: containous/whoami
+    deploy:
+      replicas: 1
+    labels:
+      - "traefik.http.routers.whoami.rule=Host(`whoami.docker.localhost`)"      
+
 networks:
   webgateway:
     driver: overlay
@@ -50,3 +68,6 @@ networks:
   traefik:
     driver: overlay
 
+volumes:
+  consul-data:
+      driver: overlay2

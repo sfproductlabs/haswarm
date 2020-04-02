@@ -47,8 +47,9 @@ This will also work for master=dockerman1
 ```wget https://github.com/containous/traefik/releases/download/v2.2.0/traefik_v2.2.0_linux_amd64.tar.gz```
 ```wget https://github.com/containous/traefik/releases/download/v1.7.24/traefik_linux-amd64``` for ./traefik17
 
-* Store config into consul (traefik 2.2 doesn't have a command to store config data easily so we need 1.7 https://docs.traefik.io/v1.7/user-guide/kv-config/) ```./traefik17 storeconfig api --docker --docker.swarmMode --docker.domain=mydomain.ca --docker.watch --consul```
-
+* [FIRST] Store config into consul (traefik 2.2 doesn't have a command to store config data easily so we need 1.7 https://docs.traefik.io/v1.7/user-guide/kv-config/) ```./traefik17 storeconfig api --docker --docker.swarmMode --docker.domain=mydomain.ca --docker.watch --consul```
+* Default run traefik ```/traefik --providers.consul --providers.docker --providers.docker.swarmMode=true --providers.docker.endpoint=unix:///var/run/docker.sock --api.insecure=true --api.dashboard=true```
+* Checkout traefik static config ```http://localhost:8080/api/rawdata```
 
 
 ### Working with docker swarm
@@ -77,3 +78,4 @@ docker service create --name dns-cache \
 * Update a docker container in place ```docker commit ....```
 * Enter machine ```docker exec -it 9ac bash```
 * **Scale** ```docker service scale haswarm_traefik_init=10```
+
