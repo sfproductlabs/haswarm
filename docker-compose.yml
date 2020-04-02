@@ -77,7 +77,7 @@ services:
         constraints:
           - node.role == manager
       restart_policy:
-        condition: always
+        condition: any
         delay: 10s
         max_attempts: 100
         window: 30s
