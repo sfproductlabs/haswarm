@@ -29,9 +29,13 @@ apk add openrc
 ./consul agent -server -bootstrap -client=0.0.0.0 -bind '{{ GetPrivateInterfaces | include "network" "10.0.0.0/8" | attr "address" }}' -data-dir '/opt/consul'
 ```
 **Clones**
+This will also work for master=dockerman1
 ```
 ./consul agent -server -bootstrap-expect=1 -client=0.0.0.0 -bind '{{ GetPrivateInterfaces | include "network" "10.0.0.0/8" | attr "address" }}' -data-dir '/opt/consul' --retry-join=dockerman1
 ```
+### Working with Traefik
+
+
 ### Working with docker swarm
 * Getting started with swarm (https://docs.docker.com/engine/swarm/swarm-tutorial/create-swarm/)
 * Sharing a port across the swarm  & swarm mode (https://docs.docker.com/engine/swarm/ingress/)
