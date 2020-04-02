@@ -34,7 +34,7 @@ apk add openrc
 ```
 ### Working with docker swarm
 * Getting started with swarm (https://docs.docker.com/engine/swarm/swarm-tutorial/create-swarm/)
-* Sharing a port across the swarm (https://docs.docker.com/engine/swarm/ingress/)
+* Sharing a port across the swarm  & swarm mode (https://docs.docker.com/engine/swarm/ingress/)
 ```
 docker service create --name dns-cache \
   --publish published=53,target=53 \
@@ -53,3 +53,6 @@ docker service create --name dns-cache \
 * Update a container definition ```docker service update haswarm_traefik_init --force```
 * Examine container processes ```docker service ps haswarm_traefik_init```
 * Remove a stack ```docker stack rm haswarm```
+* Check container stats ```docker stats haswarm_traefik_init```
+* Update a docker container in place ```docker commit ....```
+* Enter machine ```docker exec -it 9ac bash```
