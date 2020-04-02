@@ -43,12 +43,12 @@ docker service create --name dns-cache \
 ```
 * Managing secrets (https://docs.docker.com/engine/swarm/secrets/)
 
-#### Docker swarm CLI commands
+#### Docker swarm CLI command primer
 * List machines in cluster ```docker node ls```
 * Create a network ```docker network create --driver overlay --scope swarm webgateway```
 * List stacks ```docker stack ls``` _Note: A stack is actually a docker-compose.yml_
 * Deploy a docker-config.yml ```docker stack deploy -c docker-compose.yml haswarm```
-* List services ``docker service ls```
+* List services ```docker service ls```
 * Inspect logs of a container ```docker service logs haswarm_traefik_init -f```
 * Update a container definition ```docker service update haswarm_traefik_init --force```
 * Examine container processes ```docker service ps haswarm_traefik_init```
