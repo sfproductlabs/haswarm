@@ -8,6 +8,8 @@ Using consul, traefik, docker swarm.
 docker run -dit --name alpine1 alpine ash
 docker attach alpine1
 apk add openrc
+#could reuse supervisord instead
+#apk add supervisor
 ```
 
 ### Working with consul
