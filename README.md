@@ -42,6 +42,7 @@ docker service create --name dns-cache \
   dns-cache
 ```
 * Managing secrets (https://docs.docker.com/engine/swarm/secrets/)
+* Placement preferences (https://docs.docker.com/engine/swarm/services/)
 
 #### Docker swarm CLI command primer
 * List machines in cluster ```docker node ls```
@@ -56,3 +57,4 @@ docker service create --name dns-cache \
 * Check container stats ```docker stats haswarm_traefik_init```
 * Update a docker container in place ```docker commit ....```
 * Enter machine ```docker exec -it 9ac bash```
+* **Scale** ```docker service scale haswarm_traefik_init=10```
