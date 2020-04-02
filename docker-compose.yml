@@ -77,7 +77,10 @@ services:
         constraints:
           - node.role == manager
       restart_policy:
-        condition: on-failure
+        condition: always
+        delay: 10s
+        max_attempts: 100
+        window: 30s
     networks:
       - traefik
   whoami:
