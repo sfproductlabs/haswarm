@@ -84,7 +84,8 @@ services:
     image: containous/whoami
     deploy:
       restart_policy:
-        condition: on-failure:5
+        condition: on-failure
+        max-attempts: 3
       replicas: 1
     labels:
       - "traefik.http.routers.whoami.rule=Host(`whoami.docker.localhost`)"      
