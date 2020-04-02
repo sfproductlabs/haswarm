@@ -11,7 +11,14 @@ apk add openrc
 ```
 
 ### Working with consul
+**Reference:**
+* https://www.consul.io/docs/agent/options.html
+* https://linuxhint.com/run_consul_server_docker/
+
+**Download**
 ```wget https://releases.hashicorp.com/consul/1.7.2/consul_1.7.2_linux_amd64.zip```
+
+**Note**
 * No more than 5 servers per datacenter
 
 **Master Node**
