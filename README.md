@@ -35,6 +35,9 @@ This will also work for master=dockerman1
 ```
 ### Working with Traefik
 
+**Download**
+```wget https://github.com/containous/traefik/releases/download/v2.2.0/traefik_v2.2.0_linux_amd64.tar.gz```
+
 
 ### Working with docker swarm
 * Getting started with swarm (https://docs.docker.com/engine/swarm/swarm-tutorial/create-swarm/)
