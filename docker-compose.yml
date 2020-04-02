@@ -62,6 +62,7 @@ services:
       restart_policy:
         condition: on-failure
   consul:
+    hostname: consul
     image: consul
     command: sh #agent -server -bootstrap-expect=1
     volumes:
@@ -85,7 +86,9 @@ services:
     deploy:
       restart_policy:
         condition: on-failure
-        max-attempts: 3
+        delay: 5s
+        max_attempts: 3
+        window: 120s
       replicas: 1
     labels:
       - "traefik.http.routers.whoami.rule=Host(`whoami.docker.localhost`)"      
