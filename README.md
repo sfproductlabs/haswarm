@@ -32,3 +32,24 @@ apk add openrc
 ```
 ./consul agent -server -bootstrap-expect=1 -client=0.0.0.0 -bind '{{ GetPrivateInterfaces | include "network" "10.0.0.0/8" | attr "address" }}' -data-dir '/opt/consul' --retry-join=dockerman1
 ```
+### Working with docker swarm
+* Getting started with swarm (https://docs.docker.com/engine/swarm/swarm-tutorial/create-swarm/)
+* Sharing a port across the swarm (https://docs.docker.com/engine/swarm/ingress/)
+```
+docker service create --name dns-cache \
+  --publish published=53,target=53 \
+  --publish published=53,target=53,protocol=udp \
+  dns-cache
+```
+* Managing secrets (https://docs.docker.com/engine/swarm/secrets/)
+
+#### Docker swarm CLI commands
+* List machines in cluster ```docker node ls```
+* Create a network ```docker network create --driver overlay --scope swarm webgateway```
+* List stacks ```docker stack ls``` _Note: A stack is actually a docker-compose.yml_
+* Deploy a docker-config.yml ```docker stack deploy -c docker-compose.yml haswarm```
+* List services ``docker service ls```
+* Inspect logs of a container ```docker service logs haswarm_traefik_init -f```
+* Update a container definition ```docker service update haswarm_traefik_init --force```
+* Examine container processes ```docker service ps haswarm_traefik_init```
+* Remove a stack ```docker stack rm haswarm```
