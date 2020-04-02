@@ -63,7 +63,7 @@ services:
         condition: on-failure
   consul:
     image: consul
-    command: agent -server -bootstrap-expect=1
+    command: sh #agent -server -bootstrap-expect=1
     volumes:
       - consul-data:/consul/data
     environment:
@@ -83,6 +83,8 @@ services:
     # A container that exposes an API to show its IP address
     image: containous/whoami
     deploy:
+      restart_policy:
+        condition: on-failure:5
       replicas: 1
     labels:
       - "traefik.http.routers.whoami.rule=Host(`whoami.docker.localhost`)"      
