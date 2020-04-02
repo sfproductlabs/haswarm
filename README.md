@@ -26,7 +26,7 @@ apk add openrc
 
 **Master Node**
 ```
-./consul agent -server -bootstrap -client=0.0.0.0 -bind '{{ GetPrivateInterfaces | include "network" "10.0.0.0/8" | attr "address" }}' -data-dir '/opt/consul'
+./consul agent -server -bootstrap -client=0.0.0.0 -ui -bind '{{ GetPrivateInterfaces | include "network" "10.0.0.0/8" | attr "address" }}' -data-dir '/opt/consul'
 ```
 **Clones**
 This will also work for master=dockerman1
@@ -36,7 +36,12 @@ This will also work for master=dockerman1
 ### Working with Traefik
 
 **Download**
+
 ```wget https://github.com/containous/traefik/releases/download/v2.2.0/traefik_v2.2.0_linux_amd64.tar.gz```
+```wget https://github.com/containous/traefik/releases/download/v1.7.24/traefik_linux-amd64``` for ./traefik17
+
+* Store config into consul (traefik 2.2 doesn't have a command to store config data easily so we need 1.7 https://docs.traefik.io/v1.7/user-guide/kv-config/) ```./traefik17 storeconfig api --docker --docker.swarmMode --docker.domain=mydomain.ca --docker.watch --consul```
+
 
 
 ### Working with docker swarm
