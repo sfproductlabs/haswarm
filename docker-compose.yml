@@ -64,7 +64,7 @@ services:
   consul:
     hostname: consul
     image: consul
-    command: consul agent -server -bootstrap -data-dir '/consul/data'
+    command: tail -F anything
     volumes:
       - consul-data:/consul/data
     environment:
