@@ -39,6 +39,7 @@ services:
       - "--api.insecure=true"
       - "--api.dashboard=true"
       - "--providers.consul"
+      - "--providers.consul.endpoints=haswarm_consul:8500"
       - "--providers.docker"
       - "--providers.docker.swarmMode=true"
       - "--providers.docker.endpoint=unix:///var/run/docker.sock"
