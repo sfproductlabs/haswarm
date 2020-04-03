@@ -20,7 +20,7 @@ services:
       - "--docker.domain=example.com"
       - "--docker.watch"
       - "--consul"
-      - "--consul.endpoint=consul:8500"
+      - "--consul.endpoint=haswarm_consul:8500"
       - "--consul.prefix=traefik"
     networks:
       - traefik
