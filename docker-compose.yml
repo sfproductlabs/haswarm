@@ -96,6 +96,19 @@ services:
       - traefik          
     environment:
       - HOSTNAME="{{.Node.Hostname}}"      
+  alpine:
+    # A container that exposes an API to show its IP address
+    image: alpine
+    deploy:
+      restart_policy:
+        condition: none
+      replicas: 1
+    labels:
+      - "traefik.http.routers.whoami.rule=Host(`whoiswho.docker.localhost`)"  
+    networks:
+      - traefik          
+    environment:
+      - HOSTNAME="{{.Node.Hostname}}"            
 
 networks:
   webgateway:
