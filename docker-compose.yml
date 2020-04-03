@@ -64,7 +64,7 @@ services:
   consul:
     hostname: consul
     image: consul
-    command: agent -server -bootstrap -data-dir '/consul/data'
+    command: consul agent -server -bootstrap -data-dir '/consul/data'
     volumes:
       - consul-data:/consul/data
     environment:
@@ -99,6 +99,7 @@ services:
   alpine:
     # A container that exposes an API to show its IP address
     image: alpine
+    command: tail -F anything
     deploy:
       restart_policy:
         condition: none
