@@ -64,9 +64,9 @@ services:
   consul:
     hostname: consul
     image: consul
-    command: tail -F anything
-    volumes:
-      - consul-data:/consul/data
+    command: agent -server -bootstrap-expect=1
+    # volumes:
+    #   - consul-data:/consul/data
     environment:
       - CONSUL_LOCAL_CONFIG={"datacenter":"hetzner","server":true}
       - CONSUL_BIND_INTERFACE=eth0
