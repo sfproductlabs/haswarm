@@ -85,7 +85,7 @@ services:
     networks:
       - traefik
   whoami:
-    # A container that exposes an API to show its IP address
+    # A container that exposes an API to show its IP address 
     image: containous/whoami
     deploy:
       restart_policy:
