@@ -94,6 +94,8 @@ services:
       - "traefik.http.routers.whoami.rule=Host(`whoami.docker.localhost`)"  
     networks:
       - traefik          
+    environment:
+      - HOSTNAME="{{.Node.Hostname}}"      
 
 networks:
   webgateway:

@@ -77,5 +77,6 @@ docker service create --name dns-cache \
 * Check container stats ```docker stats haswarm_traefik_init```
 * Update a docker container in place ```docker commit ....```
 * Enter machine ```docker exec -it 9ac bash```
+* Inpsect network ```docker network inspect webgateway```
 * **Scale** ```docker service scale haswarm_traefik_init=10```
 
