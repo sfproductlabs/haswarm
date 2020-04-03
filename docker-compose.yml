@@ -91,7 +91,9 @@ services:
         condition: none
       replicas: 1
     labels:
-      - "traefik.http.routers.whoami.rule=Host(`whoami.docker.localhost`)"      
+      - "traefik.http.routers.whoami.rule=Host(`whoami.docker.localhost`)"  
+    networks:
+      - traefik          
 
 networks:
   webgateway:
