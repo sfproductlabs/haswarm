@@ -91,9 +91,9 @@ services:
       restart_policy:
         condition: none
       replicas: 1
-    labels:
-      - "traefik.http.routers.haswarm-whoami.rule=Host(`whoami.docker.localhost`)"  
-      - "traefik.http.services.haswarm-whoami.loadbalancer.server.port=80"
+      labels:
+        - traefik.http.routers.haswarm-whoami.rule=Host(`whoami.docker.localhost`)
+        - traefik.http.services.haswarm-whoami.loadbalancer.server.port=80
     networks:
       - traefik          
     environment:
