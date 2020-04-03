@@ -93,6 +93,7 @@ services:
       replicas: 1
     labels:
       - "traefik.http.routers.whoami.rule=Host(`whoami.docker.localhost`)"  
+      - "traefik.http.services.whoami.loadbalancer.server.port=80"
     networks:
       - traefik          
     environment:
