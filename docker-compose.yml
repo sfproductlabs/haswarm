@@ -84,7 +84,6 @@ services:
       - "443:443"
       - "8080:8080"
     deploy:
-      mode: host
       placement:
         constraints:
           - node.hostname == docker1.hetzner.sfpl.io
@@ -112,7 +111,6 @@ services:
       - "443:443"
       - "8080:8080"
     deploy:
-      mode: host
       placement:
         constraints:
           - node.hostname == docker2.hetzner.sfpl.io
@@ -140,7 +138,6 @@ services:
       - "443:443"
       - "8080:8080"
     deploy:
-      mode: host
       placement:
         constraints:
           - node.hostname == docker3.hetzner.sfpl.io
