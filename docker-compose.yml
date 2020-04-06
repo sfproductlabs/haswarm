@@ -84,10 +84,10 @@ services:
       - "443:443"
       - "8080:8080"
     deploy:
-      mode: global
+      mode: host
       placement:
         constraints:
-          - node.hostname == docker1-prod
+          - node.hostname == docker1.hetzner.sfpl.io
       update_config:
         parallelism: 1
         delay: 10s
@@ -112,10 +112,10 @@ services:
       - "443:443"
       - "8080:8080"
     deploy:
-      mode: global
+      mode: host
       placement:
         constraints:
-          - node.hostname == docker2-prod
+          - node.hostname == docker2.hetzner.sfpl.io
       update_config:
         parallelism: 1
         delay: 10s
@@ -140,10 +140,10 @@ services:
       - "443:443"
       - "8080:8080"
     deploy:
-      mode: global
+      mode: host
       placement:
         constraints:
-          - node.hostname == docker3-prod
+          - node.hostname == docker3.hetzner.sfpl.io
       update_config:
         parallelism: 1
         delay: 10s
@@ -179,6 +179,9 @@ services:
       - CONSUL_BIND_INTERFACE=eth0
       - CONSUL_CLIENT_INTERFACE=eth0
     deploy:
+      placement:
+        constraints:
+          - node.hostname == docker3.hetzner.sfpl.io
       replicas: 1
       restart_policy:
         condition: any
