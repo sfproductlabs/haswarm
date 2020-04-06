@@ -94,7 +94,7 @@ This will also work for master=dockerman1
 
 * [FIRST] Store config into consul (traefik 2.2 doesn't have a command to store config data easily so we need 1.7 https://docs.traefik.io/v1.7/user-guide/kv-config/) ```./traefik17 storeconfig api --docker --docker.swarmMode --docker.domain=mydomain.ca --docker.watch --consul```
 * Default run traefik ```/traefik --providers.consul --providers.docker --providers.docker.swarmMode=true --providers.docker.endpoint=unix:///var/run/docker.sock --api.insecure=true --api.dashboard=true```
-* Checkout traefik static config ```http://localhost:8080/api/rawdata```
+* Checkout traefik static config http://localhost:8080/api/rawdata
 
 
 ### Working with docker swarm
