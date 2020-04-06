@@ -63,6 +63,13 @@ docker service create --name dns-cache \
 ```
 * Managing secrets (https://docs.docker.com/engine/swarm/secrets/)
 * Placement preferences (https://docs.docker.com/engine/swarm/services/)
+* Constraining a service to machines - first add a label to the machines ```docker node update --label-add load_balancer=true docker1``` **then** [add to stack/docker-compose.yml](https://www.sweharris.org/post/2017-07-30-docker-placement/):
+```
+deploy:
+      replicas: 2
+      placement:
+        constraints: [node.labels.load_balancer == true ]
+```
 
 #### Docker swarm CLI command primer
 * List machines in cluster ```docker node ls```
