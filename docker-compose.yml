@@ -51,10 +51,6 @@ services:
     networks:
       - webgateway
       - traefik
-    ports:
-      - "80:80"
-      - "443:443"
-      - "8080:8080"
     deploy:
       # mode: global
       placement:
@@ -65,7 +61,7 @@ services:
         delay: 10s
       restart_policy:
         condition: any
-  traefik-lb1:
+  traefik-lb:
     image: traefik:v2.2
     depends_on:
       - trafik_init
@@ -84,68 +80,17 @@ services:
       - "443:443"
       - "8080:8080"
     deploy:
+      replicas: 3
       placement:
         constraints:
           - node.hostname == docker1.hetzner.sfpl.io
-      update_config:
-        parallelism: 1
-        delay: 10s
-      restart_policy:
-        condition: any
-  traefik-lb2:
-    image: traefik:v2.2
-    depends_on:
-      - trafik_init
-      - traefik
-      - consul
-    command:
-      - "--providers.consul"
-      - "--providers.consul.endpoints=haswarm_consul:8500"
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-    networks:
-      - webgateway
-      - traefik
-    ports:
-      - "80:80"
-      - "443:443"
-      - "8080:8080"
-    deploy:
-      placement:
-        constraints:
           - node.hostname == docker2.hetzner.sfpl.io
-      update_config:
-        parallelism: 1
-        delay: 10s
-      restart_policy:
-        condition: any     
-  traefik-lb3:
-    image: traefik:v2.2
-    depends_on:
-      - trafik_init
-      - traefik
-      - consul
-    command:
-      - "--providers.consul"
-      - "--providers.consul.endpoints=haswarm_consul:8500"
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-    networks:
-      - webgateway
-      - traefik
-    ports:
-      - "80:80"
-      - "443:443"
-      - "8080:8080"
-    deploy:
-      placement:
-        constraints:
           - node.hostname == docker3.hetzner.sfpl.io
       update_config:
         parallelism: 1
         delay: 10s
       restart_policy:
-        condition: any           
+        condition: any     
   consul:
     image: consul
     command: agent -server -bootstrap-expect=1
