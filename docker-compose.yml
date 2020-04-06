@@ -32,7 +32,7 @@ services:
         window: 30s        
     depends_on:
       - consul  
-  traefik:
+  traefik_master:
     image: traefik:v2.2
     depends_on:
       - traefik_init
@@ -63,11 +63,11 @@ services:
         delay: 10s
       restart_policy:
         condition: any
-  traefik_lb:
+  traefik:
     image: traefik:v2.2
     depends_on:
       - trafik_init
-      - traefik
+      - traefik_master
       - consul
     command:
       - "--providers.consul"
@@ -91,8 +91,6 @@ services:
   consul:
     image: consul
     command: agent -server -bootstrap-expect=1
-    depends_on:
-      - consul
     environment:
       - CONSUL_LOCAL_CONFIG={"datacenter":"hetzner","server":true}
       - CONSUL_BIND_INTERFACE=eth0
@@ -112,7 +110,9 @@ services:
   consul_backup:
     #hostname: consul-backup
     image: consul
-    command: agent -server -bootstrap-expect=1 --retry-join=haswarm_consul
+    command: agent -server --retry-join=haswarm_consul
+    depends_on:
+      - consul
     environment:
       - CONSUL_LOCAL_CONFIG={"datacenter":"hetzner","server":true}
       - CONSUL_BIND_INTERFACE=eth0
@@ -120,7 +120,7 @@ services:
     deploy:
       placement:
         constraints:
-          - node.hostname == docker3.hetzner.sfpl.io
+          - node.hostname == docker3-prod
       replicas: 1
       restart_policy:
         condition: any
