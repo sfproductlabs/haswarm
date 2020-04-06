@@ -48,9 +48,11 @@ services:
       - "--providers.docker.endpoint=unix:///var/run/docker.sock"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-    network_mode: host
-    # ports:
-    #   - "10.0.0.11:8080:8080"           
+    ports:
+      - target: 8080
+        published: 8080
+        protocol: tcp
+        mode: host
     networks:
       - traefik
     deploy:
