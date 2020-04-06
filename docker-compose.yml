@@ -75,6 +75,8 @@ services:
     command:
       - "--providers.consul"
       - "--providers.consul.endpoints=haswarm_consul:8500"
+    environment:
+      - HOSTNAME="{{.Node.Hostname}}"            
     networks:
       - webgateway
       - traefik
@@ -92,7 +94,7 @@ services:
       restart_policy:
         condition: any     
   consul:
-    image: consul
+    image: consul:1.7
     command: agent -server -bootstrap-expect=1
     environment:
       - CONSUL_LOCAL_CONFIG={"datacenter":"hetzner","server":true}
@@ -112,7 +114,7 @@ services:
       - traefik
   consul_backup:
     #hostname: consul-backup
-    image: consul
+    image: consul:1.7
     command: agent -server --retry-join=haswarm_consul
     depends_on:
       - consul

@@ -131,7 +131,7 @@ deploy:
 * Check container stats ```docker stats haswarm_traefik_init```
 * Update a docker container in place ```docker commit ....```
 * Enter machine ```docker exec -it 9ac bash```
-* Inpsect network ```docker network inspect webgateway```
+* Inpsect network ```docker network inspect webgateway```, may want or need to ```sysctl net.ipv4.conf.all.forwarding=1``` (https://docs.docker.com/network/bridge/)
 * **Scale** ```docker service scale haswarm_traefik_init=10```
 * Save a container to a tar ```docker save -o <path for generated tar file> <image name>```
 * Load a container into a docker instance ```docker load -i <path to image tar file>```
