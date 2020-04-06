@@ -1,5 +1,5 @@
 # High Availabilty Docker Swarm Config
-Using consul, traefik, docker swarm.
+Using consul, traefik, docker swarm. This is recommended for **PUBLIC** swarms only. Setup another swarm for your intranet applications.
 
 ## Getting started
 
