@@ -3,6 +3,51 @@ Using consul, traefik, docker swarm.
 
 ## Getting started
 
+### Working with ansible
+* Run a playbook ```ansible-playbook add-key.yml -i inventory.ini -u root``` where add-key.yml is:
+```
+# Add my ssh key to hosts
+---
+  - hosts: all
+    tasks:
+      - name: Write backup script for each app
+        shell: |
+          echo 'ssh-rsa Axxxxxxxx.........' >> /root/.ssh/authorized_keys
+```
+and inventory.ini is a list of hosts:
+```
+spark1
+jupyter1
+cassandra1
+```
+* Run arbitrary command on a server ```ansible jupyter1 -a "cat /etc/hosts"```
+* Run command on all servers in ```ansible all .....```
+* Run command on ansible group ```ansible docker -a "uptime"``` set the groups in /etc/ansible/hosts:
+```
+#   - Groups of hosts are delimited by [header] elements
+#   - You can enter hostnames or ip addresses
+#   - A hostname/ip can be a member of multiple groups
+
+# Ex 1: Ungrouped hosts, specify before any group headers.
+
+[cassandra]
+cassandra1
+cassandra2
+cassandra3
+
+[spark]
+cassandra1
+cassandra2
+cassandra3
+spark1
+superset1
+jupyter1
+
+[docker]
+docker1
+docker2
+```
+
 ### Working in alpine
 ```
 docker run -dit --name alpine1 alpine ash
