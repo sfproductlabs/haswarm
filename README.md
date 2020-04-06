@@ -1,5 +1,5 @@
 # High Availabilty Docker Swarm Config
-Using consul, traefik, docker swarm.
+Using consul, traefik, docker swarm. This is recommended for **PUBLIC** swarms only. Setup another swarm for your intranet applications, or at least improve the firewall configuration as per below.
 
 ## Getting started
 
@@ -99,7 +99,7 @@ This will also work for master=dockerman1
 
 ### Working with docker swarm
 
-* Setup ufw firewall (https://stackoverflow.com/questions/30383845/what-is-the-best-practice-of-docker-ufw-under-ubuntu/51741599#51741599)
+* Setup ufw firewall (https://github.com/chaifeng/ufw-docker#ufw-docker-util)
 * Getting started with swarm (https://docs.docker.com/engine/swarm/swarm-tutorial/create-swarm/)
 * Sharing a port across the swarm  & swarm mode (https://docs.docker.com/engine/swarm/ingress/)
 ```
