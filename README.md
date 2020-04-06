@@ -79,4 +79,8 @@ docker service create --name dns-cache \
 * Enter machine ```docker exec -it 9ac bash```
 * Inpsect network ```docker network inspect webgateway```
 * **Scale** ```docker service scale haswarm_traefik_init=10```
+* Save a container to a tar ```docker save -o <path for generated tar file> <image name>```
+* Load a container into a docker instance ```docker load -i <path to image tar file>```
 
+## TODO
+- [ ] Check out the ip route in hetzner, binding settings of docker

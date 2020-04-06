@@ -27,6 +27,9 @@ services:
     deploy:
       restart_policy:
         condition: on-failure
+        delay: 10s
+        max_attempts: 5
+        window: 30s        
     depends_on:
       - consul  
   traefik:
@@ -62,12 +65,95 @@ services:
         delay: 10s
       restart_policy:
         condition: any
+  traefik-lb1:
+    image: traefik:v2.2
+    depends_on:
+      - trafik_init
+      - traefik
+      - consul
+    command:
+      - "--providers.consul"
+      - "--providers.consul.endpoints=haswarm_consul:8500"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+      - webgateway
+      - traefik
+    ports:
+      - "80:80"
+      - "443:443"
+      - "8080:8080"
+    deploy:
+      mode: global
+      placement:
+        constraints:
+          - node.hostname == docker1
+      update_config:
+        parallelism: 1
+        delay: 10s
+      restart_policy:
+        condition: any
+  traefik-lb2:
+    image: traefik:v2.2
+    depends_on:
+      - trafik_init
+      - traefik
+      - consul
+    command:
+      - "--providers.consul"
+      - "--providers.consul.endpoints=haswarm_consul:8500"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+      - webgateway
+      - traefik
+    ports:
+      - "80:80"
+      - "443:443"
+      - "8080:8080"
+    deploy:
+      mode: global
+      placement:
+        constraints:
+          - node.hostname == docker2
+      update_config:
+        parallelism: 1
+        delay: 10s
+      restart_policy:
+        condition: any     
+  traefik-lb3:
+    image: traefik:v2.2
+    depends_on:
+      - trafik_init
+      - traefik
+      - consul
+    command:
+      - "--providers.consul"
+      - "--providers.consul.endpoints=haswarm_consul:8500"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+      - webgateway
+      - traefik
+    ports:
+      - "80:80"
+      - "443:443"
+      - "8080:8080"
+    deploy:
+      mode: global
+      placement:
+        constraints:
+          - node.hostname == docker3
+      update_config:
+        parallelism: 1
+        delay: 10s
+      restart_policy:
+        condition: any           
   consul:
-    hostname: consul
     image: consul
     command: agent -server -bootstrap-expect=1
-    # volumes:
-    #   - consul-data:/consul/data
+    depends_on:
+      - consul
     environment:
       - CONSUL_LOCAL_CONFIG={"datacenter":"hetzner","server":true}
       - CONSUL_BIND_INTERFACE=eth0
@@ -84,34 +170,52 @@ services:
         window: 30s
     networks:
       - traefik
-  whoami:
-    # A container that exposes an API to show its IP address 
-    image: containous/whoami
-    deploy:
-      restart_policy:
-        condition: none
-      replicas: 1
-      labels:
-        - traefik.http.routers.haswarm-whoami.rule=Host(`whoami.docker.localhost`)
-        - traefik.http.services.haswarm-whoami.loadbalancer.server.port=80
-    networks:
-      - traefik          
+  consul-backup:
+    hostname: consul-backup
+    image: consul
+    command: agent -server -bootstrap-expect=1 --retry-join=haswarm_consul
     environment:
-      - HOSTNAME="{{.Node.Hostname}}"      
-  alpine:
-    # A container that exposes an API to show its IP address
-    image: alpine
-    command: tail -F anything
+      - CONSUL_LOCAL_CONFIG={"datacenter":"hetzner","server":true}
+      - CONSUL_BIND_INTERFACE=eth0
+      - CONSUL_CLIENT_INTERFACE=eth0
     deploy:
-      restart_policy:
-        condition: none
       replicas: 1
-    labels:
-      - "traefik.http.routers.whoami.rule=Host(`whoiswho.docker.localhost`)"  
+      restart_policy:
+        condition: any
+        delay: 10s
+        max_attempts: 100
+        window: 30s
     networks:
-      - traefik          
-    environment:
-      - HOSTNAME="{{.Node.Hostname}}"            
+      - traefik      
+  ## These are for testing
+  # whoami:
+  #   # A container that exposes an API to show its IP address 
+  #   image: containous/whoami
+  #   deploy:
+  #     restart_policy:
+  #       condition: none
+  #     replicas: 1
+  #     labels:
+  #       - traefik.http.routers.haswarm-whoami.rule=Host(`whoami.docker.localhost`)
+  #       - traefik.http.services.haswarm-whoami.loadbalancer.server.port=80
+  #   networks:
+  #     - traefik          
+  #   environment:
+  #     - HOSTNAME="{{.Node.Hostname}}"      
+  # alpine:
+  #   # A container that exposes an API to show its IP address
+  #   image: alpine
+  #   command: tail -F anything
+  #   deploy:
+  #     restart_policy:
+  #       condition: none
+  #     replicas: 1
+  #   labels:
+  #     - "traefik.http.routers.whoami.rule=Host(`whoiswho.docker.localhost`)"  
+  #   networks:
+  #     - traefik          
+  #   environment:
+  #     - HOSTNAME="{{.Node.Hostname}}"            
 
 networks:
   webgateway:
@@ -119,7 +223,3 @@ networks:
     external: true
   traefik:
     driver: overlay
-
-volumes:
-  consul-data:
-      driver: overlay2
