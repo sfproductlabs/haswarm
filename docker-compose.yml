@@ -24,6 +24,8 @@ services:
       - "--consul.prefix=traefik"
     networks:
       - traefik
+    ports:
+      - "8080:8080"      
     deploy:
       restart_policy:
         condition: on-failure
@@ -76,7 +78,6 @@ services:
     ports:
       - "80:80"
       - "443:443"
-      - "8080:8080"
     deploy:
       replicas: 3
       placement:
