@@ -70,8 +70,6 @@ services:
     command:
       - "--providers.consul"
       - "--providers.consul.endpoints=haswarm_consul:8500"
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
     networks:
       - webgateway
       - traefik
@@ -83,9 +81,7 @@ services:
       replicas: 3
       placement:
         constraints:
-          - node.hostname == docker1-prod
-          - node.hostname == docker2-prod
-          - node.hostname == docker3-prod
+          - node.labels.load_balancer == true
       update_config:
         parallelism: 1
         delay: 10s
