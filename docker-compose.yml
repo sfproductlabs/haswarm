@@ -23,9 +23,7 @@ services:
       - "--consul.endpoint=haswarm_consul:8500"
       - "--consul.prefix=traefik"
     networks:
-      - traefik
-    ports:
-      - "8080:8080"      
+      - traefik 
     deploy:
       restart_policy:
         condition: on-failure
@@ -50,6 +48,8 @@ services:
       - "--providers.docker.endpoint=unix:///var/run/docker.sock"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
+    ports:
+      - "8080:8080"           
     networks:
       - webgateway
       - traefik
