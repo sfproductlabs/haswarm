@@ -83,9 +83,9 @@ services:
       replicas: 3
       placement:
         constraints:
-          - node.hostname == docker1.hetzner.sfpl.io
-          - node.hostname == docker2.hetzner.sfpl.io
-          - node.hostname == docker3.hetzner.sfpl.io
+          - node.hostname == docker1-prod
+          - node.hostname == docker2-prod
+          - node.hostname == docker3-prod
       update_config:
         parallelism: 1
         delay: 10s
@@ -113,7 +113,7 @@ services:
     networks:
       - traefik
   consul_backup:
-    hostname: consul-backup
+    #hostname: consul-backup
     image: consul
     command: agent -server -bootstrap-expect=1 --retry-join=haswarm_consul
     environment:
