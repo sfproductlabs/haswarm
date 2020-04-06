@@ -61,7 +61,7 @@ services:
         delay: 10s
       restart_policy:
         condition: any
-  traefik-lb:
+  traefik_lb:
     image: traefik:v2.2
     depends_on:
       - trafik_init
@@ -112,7 +112,7 @@ services:
         window: 30s
     networks:
       - traefik
-  consul-backup:
+  consul_backup:
     hostname: consul-backup
     image: consul
     command: agent -server -bootstrap-expect=1 --retry-join=haswarm_consul
