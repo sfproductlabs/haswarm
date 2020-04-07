@@ -4,6 +4,7 @@ Using consul, traefik, docker swarm. This is recommended for **PUBLIC** swarms o
 ## TL;DR
 * Update the [docker-compose.yml](https://github.com/dioptre/haswarm/blob/master/docker-compose.yml) docker swarm/stack to suit your infrastructure.
 * Add a label to the machines you want as a load-balancer/traefik ```docker node update --label-add load_balancer=true docker1``` etc.
+* Create a unifying network (if you want to make the example usable) Ex. ```docker network create -d overlay forenet``` (fore/aft nets are for front/back ends/swarms in our world) and add the machines you want to share to it. You need to add this to the default docker-compose networks if you want to share your network with other stacks.
 * Deploy the stack onto your swarm using [deploy.sh](https://github.com/dioptre/haswarm/blob/master/deploy.sh).
 
 ## Getting started
