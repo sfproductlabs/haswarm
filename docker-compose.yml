@@ -56,8 +56,6 @@ services:
     networks:
       - traefik
     deploy:
-      # mode: global
-      # endpoint_mode: dnsrr
       placement:
         constraints:
           - node.role == manager
@@ -76,7 +74,7 @@ services:
       - "--providers.consul"
       - "--providers.consul.endpoints=haswarm_consul:8500"
     environment:
-      - HOSTNAME="{{.Node.Hostname}}"            
+      - SWARM_NODE="{{.Node.Hostname}}"            
     networks:
       - webgateway
       - traefik
@@ -84,6 +82,7 @@ services:
       - "80:80"
       - "443:443"
     deploy:
+      #mode: global
       replicas: 3
       placement:
         constraints:
@@ -101,7 +100,6 @@ services:
       - CONSUL_BIND_INTERFACE=eth0
       - CONSUL_CLIENT_INTERFACE=eth0
     deploy:
-      mode: global
       placement:
         constraints:
           - node.role == manager
@@ -113,7 +111,6 @@ services:
     networks:
       - traefik
   consul_backup:
-    #hostname: consul-backup
     image: consul:1.7
     command: agent -server --retry-join=haswarm_consul
     depends_on:
@@ -148,7 +145,7 @@ services:
   #   networks:
   #     - traefik          
   #   environment:
-  #     - HOSTNAME="{{.Node.Hostname}}"      
+  #     - SWARM_NODE="{{.Node.Hostname}}"      
   # alpine:
   #   # A container that exposes an API to show its IP address
   #   image: alpine
@@ -162,7 +159,7 @@ services:
   #   networks:
   #     - traefik          
   #   environment:
-  #     - HOSTNAME="{{.Node.Hostname}}"            
+  #     - SWARM_NODE="{{.Node.Hostname}}"            
 
 networks:
   webgateway:
