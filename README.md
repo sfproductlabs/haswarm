@@ -1,6 +1,9 @@
 # High Availabilty Docker Swarm Config
 Using consul, traefik, docker swarm. This is recommended for **PUBLIC** swarms only. Setup another swarm for your intranet applications, or at least improve the firewall configuration as per below.
 
+## TL;DR
+* Install the [docker-compose.yml](https://github.com/dioptre/haswarm/blob/master/docker-compose.yml) on your docker swarm stack.
+
 ## Getting started
 
 ### Working with ansible
@@ -117,6 +120,7 @@ deploy:
       placement:
         constraints: [node.labels.load_balancer == true ]
 ```
+* Get the ips for a service ```nslookup tasks.haswarm_alpine.``` and might be useful for other docker-compose stacks to get particpant ips ```dig +short tasks.haswarm_alpine. | grep -v "116.202.183.82" | awk '{system("echo " $1)}'``` (dig is part of dnsutils in debian)
 
 #### Docker swarm CLI command primer
 * List machines in cluster ```docker node ls```
@@ -137,4 +141,6 @@ deploy:
 * Load a container into a docker instance ```docker load -i <path to image tar file>```
 
 ## TODO
+- [ ] Auto update dns if down
+- [ ] Auto update floating up if down
 - [ ] Check out the ip route in hetzner, binding settings of docker
