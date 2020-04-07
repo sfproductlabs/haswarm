@@ -2,7 +2,8 @@
 Using consul, traefik, docker swarm. This is recommended for **PUBLIC** swarms only. Setup another swarm for your intranet applications, or at least improve the firewall configuration as per below.
 
 ## TL;DR
-* Install the [docker-compose.yml](https://github.com/dioptre/haswarm/blob/master/docker-compose.yml) on your docker swarm stack.
+* Update the [docker-compose.yml](https://github.com/dioptre/haswarm/blob/master/docker-compose.yml) docker swarm/stack to suit your infrastructure.
+* Deploy the stack onto your swarm using [deploy.sh](https://github.com/dioptre/haswarm/blob/master/deploy.sh).
 
 ## Getting started
 
