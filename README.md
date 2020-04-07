@@ -1,6 +1,9 @@
 # High Availabilty Docker Swarm Config
 Using consul, traefik, docker swarm. This is recommended for **PUBLIC** swarms only. Setup another swarm for your intranet applications, or at least improve the firewall configuration as per below.
 
+## TL;DR
+* Install the [docker-compose.yml](https://github.com/dioptre/haswarm/blob/master/docker-compose.yml) on your docker swarm stack.
+
 ## Getting started
 
 ### Working with ansible
