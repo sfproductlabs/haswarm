@@ -3,6 +3,7 @@ Using consul, traefik, docker swarm. This is recommended for **PUBLIC** swarms o
 
 ## TL;DR
 * Update the [docker-compose.yml](https://github.com/dioptre/haswarm/blob/master/docker-compose.yml) docker swarm/stack to suit your infrastructure.
+* Add a label to the machines you want as a load-balancer/traefik ```docker node update --label-add load_balancer=true docker1``` etc.
 * Deploy the stack onto your swarm using [deploy.sh](https://github.com/dioptre/haswarm/blob/master/deploy.sh).
 
 ## Getting started
