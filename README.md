@@ -92,6 +92,10 @@ This will also work for master=dockerman1
 ./consul agent -server -bootstrap-expect=1 -client=0.0.0.0 -bind '{{ GetPrivateInterfaces | include "network" "10.0.0.0/8" | attr "address" }}' -data-dir '/opt/consul' --retry-join=dockerman1
 ```
 ### Working with Traefik
+**Query Matching**
+https://docs.traefik.io/routing/routers/#rule
+
+* Ex. ```rule = "Host(`example.com`) || (Host(`example.org`) && Path(`/traefik`))"```
 
 **Download**
 
@@ -124,6 +128,15 @@ deploy:
         constraints: [node.labels.load_balancer == true ]
 ```
 * Get the ips for a service ```nslookup tasks.haswarm_alpine.``` and might be useful for other docker-compose stacks to get particpant ips ```dig +short tasks.haswarm_alpine. | grep -v "116.202.183.82" | awk '{system("echo " $1)}'``` (dig is part of dnsutils in debian)
+
+#### Docker secrets
+https://docs.docker.com/engine/reference/commandline/secret/
+
+* List secrets ```docker secret ls```
+* Create secret from stdin ```echo "SDFDSF" | docker secret create test -```
+* Create secret from file ```docker secret create nats-server.key nats-server.key```
+
+
 
 #### Docker swarm CLI command primer
 * List machines in cluster ```docker node ls```
