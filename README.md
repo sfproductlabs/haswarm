@@ -7,6 +7,10 @@ Using consul, traefik, docker swarm. This is recommended for **PUBLIC** swarms o
 * Create a unifying network (if you want to make the example usable) Ex. ```docker network create -d overlay webgateway && docker network create -d overlay forenet``` (fore/aft nets are for front/back ends/swarms in our world) and add the machines you want to share to it. You need to add this to the default docker-compose networks if you want to share your network with other stacks.
 * Deploy the stack onto your swarm using [deploy.sh](https://github.com/dioptre/haswarm/blob/master/deploy.sh).
 
+### Docker swarm execution options
+* Run traefik on only manager nodes (https://docs.traefik.io/providers/docker/#docker-api-access_1) or share the nodes docker socket (https://github.com/Tecnativa/docker-socket-proxy). 
+* **OR** use consul to configure the nodes
+
 ## Getting started
 
 ### Working with ansible
