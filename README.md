@@ -86,7 +86,7 @@ apk add openrc
 ```
 curl --request PUT http://haswarm_consul:8500/v1/kv/traefik/http/routers/tracker/rule -d 'Host(`tr.sfpl.io`)'
 curl --request PUT http://haswarm_consul:8500/v1/kv/traefik/http/routers/tracker/service -d 'tracker'
-curl --request PUT http://haswarm_consul:8500/v1/kv/traefik/http/services/tracker/loadBalancer/servers/0/url -d 'http://tracker_tracker:8443'
+curl --request PUT http://haswarm_consul:8500/v1/kv/traefik/http/services/tracker/loadBalancer/servers/0/url -d 'https://tracker_tracker:8443'
 ```
 
 **Firewall rules/ports for master node**
