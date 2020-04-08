@@ -155,6 +155,7 @@ https://docs.docker.com/engine/reference/commandline/secret/
 * **Scale** ```docker service scale haswarm_traefik_init=10```
 * Save a container to a tar ```docker save -o <path for generated tar file> <image name>```
 * Load a container into a docker instance ```docker load -i <path to image tar file>```
+* Force a stack group of replicas to reload ```docker service update --force haswarm_traefik```
 
 ## TODO
 - [ ] Auto update dns if down
