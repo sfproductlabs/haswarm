@@ -160,6 +160,7 @@ https://docs.docker.com/engine/reference/commandline/secret/
 * Save a container to a tar ```docker save -o <path for generated tar file> <image name>```
 * Load a container into a docker instance ```docker load -i <path to image tar file>```
 * Force a stack group of replicas to reload ```docker service update --force haswarm_traefik```
+* Promote a node to a manager (one remains the leader using raft) ```docker node promote docker1``` or ```docker node update docker-1 --role manager```
 
 ## TODO
 - [ ] Auto update dns if down
