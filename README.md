@@ -84,9 +84,9 @@ apk add openrc
 
 **Using Consul to forward proxy traffic**
 ```
-curl --request PUT http://127.0.0.1:8500/v1/kv/traefik/http/routers/radix/rule -d 'Host(`radix.local`)'
-curl --request PUT http://127.0.0.1:8500/v1/kv/traefik/http/routers/radix/service -d 'radix'
-curl --request PUT http://127.0.0.1:8500/v1/kv/traefik/http/services/radix/loadBalancer/servers/0/url -d 'http://localhost:2012'
+curl --request PUT http://haswarm_consul:8500/v1/kv/traefik/http/routers/tracker/rule -d 'Host(`tr.sfpl.io`)'
+curl --request PUT http://haswarm_consul:8500/v1/kv/traefik/http/routers/tracker/service -d 'tracker'
+curl --request PUT http://haswarm_consul:8500/v1/kv/traefik/http/services/tracker/loadBalancer/servers/0/url -d 'http://tracker_tracker:8443'
 ```
 
 **Firewall rules/ports for master node**
