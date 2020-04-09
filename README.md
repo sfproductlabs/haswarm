@@ -168,6 +168,8 @@ https://docs.docker.com/engine/reference/commandline/secret/
 * Load a container into a docker instance ```docker load -i <path to image tar file>```
 * Force a stack group of replicas to reload ```docker service update --force haswarm_traefik```
 * Promote a node to a manager (one remains the leader using raft) ```docker node promote docker1``` or ```docker node update docker-1 --role manager```
+* Retrieve a clusterfucked cluster with a dead manager ```docker swarm init  --force-new-cluster ...```
+* Options to specify an IP address binding when publishing ports ```docker network create -o "com.docker.network.bridge.host_binding_ipv4"="172.19.0.1" simple-network``` (https://docs.docker.com/engine/reference/commandline/network_create/)
 
 ## TODO
 - [ ] Auto update dns if down
