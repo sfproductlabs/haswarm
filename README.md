@@ -14,7 +14,9 @@ Using consul, traefik, docker swarm. This is recommended for **PUBLIC** swarms o
 ## Getting started
 
 ### Working with ansible
-* Run a playbook ```ansible-playbook add-key.yml -i inventory.ini -u root``` where add-key.yml is:
+####  Run a playbook 
+
+```ansible-playbook add-key.yml -i inventory.ini -u root``` where add-key.yml is:
 ```
 # Add my ssh key to hosts
 ---
@@ -57,6 +59,19 @@ jupyter1
 docker1
 docker2
 ```
+#### Execute commands on all your docker containers (after setup of the hosts file above)
+
+* Check uptime ```ansible docker -a "uptime"```
+* Clean up a dirty docker swarm
+
+```ansible docker -a "docker image ls"```
+
+(Found the 085e image in this example)
+
+```ansible docker -a "docker image rm 085e"```
+
+```ansible docker -a "docker system prune -f"```
+
 
 ### Working in alpine
 ```
@@ -155,7 +170,7 @@ https://docs.docker.com/engine/reference/commandline/secret/
 * List stacks ```docker stack ls``` _Note: A stack is actually a docker-compose.yml_
 * Deploy a docker-config.yml ```docker stack deploy -c docker-compose.yml haswarm```
 * List services ```docker service ls```
-* Inspect logs of a container ```docker service logs haswarm_traefik_init -f```
+* Inspect logs of a container ```docker service logs haswarm_traefik_init -f``` (-f = follow, or update in realtime)
 * Update a container definition ```docker service update haswarm_traefik_init --force```
 * Examine container processes ```docker service ps haswarm_traefik_init```
 * Remove a stack ```docker stack rm haswarm```
