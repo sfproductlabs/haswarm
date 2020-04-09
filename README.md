@@ -170,6 +170,13 @@ https://docs.docker.com/engine/reference/commandline/secret/
 * Promote a node to a manager (one remains the leader using raft) ```docker node promote docker1``` or ```docker node update docker-1 --role manager```
 * Retrieve a clusterfucked cluster with a dead manager ```docker swarm init  --force-new-cluster ...```
 * Options to specify an IP address binding when publishing ports ```docker network create -o "com.docker.network.bridge.host_binding_ipv4"="172.19.0.1" simple-network``` (https://docs.docker.com/engine/reference/commandline/network_create/)
+* Remove a node from a swarm
+```
+#Demote the affected node to a worker
+#Move /var/lib/docker/swarm out of the way on the affected node
+#Join again using docker swarm join
+#Delete old the node entry (docker node rm) afterwards, to clean up the node list.
+```
 
 ## TODO
 - [ ] Auto update dns if down
