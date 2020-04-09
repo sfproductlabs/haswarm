@@ -82,41 +82,71 @@ apk add openrc
 #apk add supervisor
 ```
 
+### Working with etcd
+```
+$ docker exec -it etcd /bin/sh
+/ # etcdctl put traefik/http/routers/radix/rule 'Host(`radix.local`)'
+OK
+/ # etcdctl put traefik/http/routers/radix/service radix
+OK
+/ # etcdctl put traefik/http/services/radix/loadBalancer/servers/0/url http://localhost:2012
+OK
+```
+
 ### Working with consul
-**Reference:**
+
+#### Reference:
 * https://www.consul.io/docs/agent/options.html
 * https://linuxhint.com/run_consul_server_docker/
 
-**Download**
+#### Download 
 
 ```wget https://releases.hashicorp.com/consul/1.7.2/consul_1.7.2_linux_amd64.zip```
 
-**Note**
+#### Note
 * No more than 5 servers per datacenter
 * Get key ```curl http://127.0.0.1:8500/v1/kv/traefik/consul/```
 * Put key (no data/null) ```curl --request PUT http://127.0.0.1:8500/v1/kv/traefik/consul/```
 * Put key (with data/json) ```curl --request PUT http://127.0.0.1:8500/v1/kv/traefik/consul/watch -H 'Content-Type: application/json' -d 'true'```
 
-**Using Consul to forward proxy traffic**
+#### Using Consul to forward proxy traffic
 ```
 curl --request PUT http://haswarm_consul:8500/v1/kv/traefik/http/routers/tracker/rule -d 'Host(`tr.sfpl.io`)'
 curl --request PUT http://haswarm_consul:8500/v1/kv/traefik/http/routers/tracker/service -d 'tracker'
 curl --request PUT http://haswarm_consul:8500/v1/kv/traefik/http/services/tracker/loadBalancer/servers/0/url -d 'https://tracker_tracker:8443'
 ```
 
-**Firewall rules/ports for master node**
+#### Firewall rules/ports for master node
 * ```sudo ufw allow from 10.0.0.0/16 to any port 8500 proto tcp``` 8501 for https
 * ```sudo ufw allow from 10.0.0.0/16 to any port 8300 proto tcp```
 
-**Master Node**
+#### Master Node
 ```
 ./consul agent -server -bootstrap -client=0.0.0.0 -ui -bind '{{ GetPrivateInterfaces | include "network" "10.0.0.0/8" | attr "address" }}' -data-dir '/opt/consul'
 ```
-**Clones**
+#### Clones
 This will also work for master=dockerman1
 ```
 ./consul agent -server -bootstrap-expect=1 -client=0.0.0.0 -bind '{{ GetPrivateInterfaces | include "network" "10.0.0.0/8" | attr "address" }}' -data-dir '/opt/consul' --retry-join=dockerman1
 ```
+#### Fixing a consul acme account
+https://github.com/containous/traefik/issues/5047
+```
+export CONSUL_HTTP_ADDR=consul:8500
+
+# get value from consul and store it to acme.json
+consul kv get traefik/acme/account/object | gzip -dc > acme.json
+
+# remove invalid domain and store it to acme-fixed.json
+cat acme.json | jq -r 'del (.DomainsCertificate.Certs[] | select(.Domains.Main=="'yourdomain.com'"))' > acme-fixed.json
+
+# gzip it
+cat acme-fixed.json | gzip -c > acme-fixed.json.gz
+
+# upload fixed and gzipped json back to consul
+consul kv put traefik/acme/account/object @acme-fixed.json.gz
+```
+
 ### Working with Traefik
 **Query Matching**
 https://docs.traefik.io/routing/routers/#rule
