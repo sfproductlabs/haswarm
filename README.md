@@ -104,7 +104,7 @@ OK
 ```wget https://releases.hashicorp.com/consul/1.7.2/consul_1.7.2_linux_amd64.zip```
 
 #### Note
-* No more than 5 servers per datacenter
+* No more than 5 servers per datacenter https://www.consul.io/docs/agent/options.html#_server
 * Get key ```curl http://127.0.0.1:8500/v1/kv/traefik/consul/```
 * Put key (no data/null) ```curl --request PUT http://127.0.0.1:8500/v1/kv/traefik/consul/```
 * Put key (with data/json) ```curl --request PUT http://127.0.0.1:8500/v1/kv/traefik/consul/watch -H 'Content-Type: application/json' -d 'true'```
