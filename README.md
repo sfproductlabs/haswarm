@@ -1,5 +1,5 @@
 # High Availabilty Docker Swarm Config
-My notes after trying to use consul, traefik for docker swarm. This is not recommended. [Use my new project instead](https://github.com/sfproductlabs/roo).
+My notes after trying to use consul, traefik for docker swarm. This is **not recommended**. [Use my new project instead](https://github.com/sfproductlabs/roo).
 
 ## TL;DR
 * Update the [docker-compose.yml](https://github.com/dioptre/haswarm/blob/master/docker-compose.yml) docker swarm/stack to suit your infrastructure.
