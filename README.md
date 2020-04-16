@@ -8,10 +8,73 @@ My notes after trying to use consul, traefik for docker swarm. This is **not rec
 * Deploy the stack onto your swarm using [deploy.sh](https://github.com/dioptre/haswarm/blob/master/deploy.sh).
 
 ### Docker swarm execution options
-* Run traefik on only manager nodes (https://docs.traefik.io/providers/docker/#docker-api-access_1) or share the nodes docker socket (https://github.com/Tecnativa/docker-socket-proxy). 
-* **OR** use consul to configure the nodes
+* Use [roo](https://github.com/sfproductlabs/roo)
+* Traefik in their infinite wisdom removed functionality for their premium version. Do not use it. ~~Run traefik on only manager nodes (https://docs.traefik.io/providers/docker/#docker-api-access_1) or share the nodes docker socket (https://github.com/Tecnativa/docker-socket-proxy). ~~
+* ~~**OR** use consul to configure the nodes~~
 
 ## Getting started
+
+### Working with docker swarm
+
+* Setup ufw firewall (https://github.com/chaifeng/ufw-docker#ufw-docker-util)
+* Getting started with swarm (https://docs.docker.com/engine/swarm/swarm-tutorial/create-swarm/)
+* Sharing a port across the swarm  & swarm mode (https://docs.docker.com/engine/swarm/ingress/)
+```
+docker service create --name dns-cache \
+  --publish published=53,target=53 \
+  --publish published=53,target=53,protocol=udp \
+  dns-cache
+```
+* Managing secrets (https://docs.docker.com/engine/swarm/secrets/)
+* Placement preferences (https://docs.docker.com/engine/swarm/services/)
+* Constraining a service to machines - first add a label to the machines ```docker node update --label-add load_balancer=true docker1``` **then** [add to stack/docker-compose.yml](https://www.sweharris.org/post/2017-07-30-docker-placement/) like this (https://github.com/BretFisher/dogvscat/blob/master/stack-proxy-global.yml#L124):
+```
+deploy:
+      replicas: 2
+      placement:
+        constraints: [node.labels.load_balancer == true ]
+```
+* Get the ips for a service ```nslookup tasks.haswarm_alpine.``` and might be useful for other docker-compose stacks to get particpant ips ```dig +short tasks.haswarm_alpine. | grep -v "116.202.183.82" | awk '{system("echo " $1)}'``` (dig is part of dnsutils in debian)
+
+#### Docker secrets
+https://docs.docker.com/engine/reference/commandline/secret/
+
+* List secrets ```docker secret ls```
+* Create secret from stdin ```echo "SDFDSF" | docker secret create test -```
+* Create secret from file ```docker secret create nats-server.key nats-server.key```
+
+
+
+#### Docker swarm CLI command primer
+* Observing Docker events ```curl --unix-socket /var/run/docker.sock http://localhost/events```
+* List machines in cluster ```docker node ls```
+* Create a network ```docker network create --driver overlay --scope swarm webgateway```
+* List stacks ```docker stack ls``` _Note: A stack is actually a docker-compose.yml_
+* Deploy a docker-config.yml ```docker stack deploy -c docker-compose.yml haswarm```
+* List services ```docker service ls```
+* Inspect logs of a container ```docker service logs haswarm_traefik_init -f``` (-f = follow, or update in realtime)
+* Update a container definition ```docker service update haswarm_traefik_init --force```
+* Examine container processes ```docker service ps haswarm_traefik_init```
+* Remove a stack ```docker stack rm haswarm```
+* Check container stats ```docker stats haswarm_traefik_init```
+* Update a docker container in place ```docker commit ....```
+* Enter machine ```docker exec -it 9ac bash```
+* Inpsect network ```docker network inspect webgateway```, may want or need to ```sysctl net.ipv4.conf.all.forwarding=1``` (https://docs.docker.com/network/bridge/)
+* **Scale** ```docker service scale haswarm_traefik_init=10```
+* Save a container to a tar ```docker save -o <path for generated tar file> <image name>```
+* Load a container into a docker instance ```docker load -i <path to image tar file>```
+* Force a stack group of replicas to reload ```docker service update --force haswarm_traefik```
+* Promote a node to a manager (one remains the leader using raft) ```docker node promote docker1``` or ```docker node update docker-1 --role manager```
+* Retrieve a clusterfucked cluster with a dead manager ```docker swarm init  --force-new-cluster ...```
+* Options to specify an IP address binding when publishing ports ```docker network create -o "com.docker.network.bridge.host_binding_ipv4"="172.19.0.1" simple-network``` (https://docs.docker.com/engine/reference/commandline/network_create/)
+* Remove a node from a swarm
+```
+#Demote the affected node to a worker
+#Move /var/lib/docker/swarm out of the way on the affected node
+#Join again using docker swarm join
+#Delete old the node entry (docker node rm) afterwards, to clean up the node list.
+```
+
 
 ### Working with ansible
 ####  Run a playbook 
@@ -147,13 +210,14 @@ cat acme-fixed.json | gzip -c > acme-fixed.json.gz
 consul kv put traefik/acme/account/object @acme-fixed.json.gz
 ```
 
-### Working with Traefik
-**Query Matching**
+### Working with Traefik (I RECOMMEND AGAINST USING TRAEFIK) 
+
+#### Query Matching
 https://docs.traefik.io/routing/routers/#rule
 
 * Ex. ```rule = "Host(`example.com`) || (Host(`example.org`) && Path(`/traefik`))"```
 
-**Download**
+#### Download
 
 ```wget https://github.com/containous/traefik/releases/download/v2.2.0/traefik_v2.2.0_linux_amd64.tar.gz```
 ```wget https://github.com/containous/traefik/releases/download/v1.7.24/traefik_linux-amd64``` for ./traefik17
@@ -161,68 +225,6 @@ https://docs.traefik.io/routing/routers/#rule
 * [FIRST] Store config into consul (traefik 2.2 doesn't have a command to store config data easily so we need 1.7 https://docs.traefik.io/v1.7/user-guide/kv-config/) ```./traefik17 storeconfig api --docker --docker.swarmMode --docker.domain=mydomain.ca --docker.watch --consul```
 * Default run traefik ```/traefik --providers.consul --providers.docker --providers.docker.swarmMode=true --providers.docker.endpoint=unix:///var/run/docker.sock --api.insecure=true --api.dashboard=true```
 * Checkout traefik static config http://localhost:8080/api/rawdata
-
-
-### Working with docker swarm
-
-* Setup ufw firewall (https://github.com/chaifeng/ufw-docker#ufw-docker-util)
-* Getting started with swarm (https://docs.docker.com/engine/swarm/swarm-tutorial/create-swarm/)
-* Sharing a port across the swarm  & swarm mode (https://docs.docker.com/engine/swarm/ingress/)
-```
-docker service create --name dns-cache \
-  --publish published=53,target=53 \
-  --publish published=53,target=53,protocol=udp \
-  dns-cache
-```
-* Managing secrets (https://docs.docker.com/engine/swarm/secrets/)
-* Placement preferences (https://docs.docker.com/engine/swarm/services/)
-* Constraining a service to machines - first add a label to the machines ```docker node update --label-add load_balancer=true docker1``` **then** [add to stack/docker-compose.yml](https://www.sweharris.org/post/2017-07-30-docker-placement/) like this (https://github.com/BretFisher/dogvscat/blob/master/stack-proxy-global.yml#L124):
-```
-deploy:
-      replicas: 2
-      placement:
-        constraints: [node.labels.load_balancer == true ]
-```
-* Get the ips for a service ```nslookup tasks.haswarm_alpine.``` and might be useful for other docker-compose stacks to get particpant ips ```dig +short tasks.haswarm_alpine. | grep -v "116.202.183.82" | awk '{system("echo " $1)}'``` (dig is part of dnsutils in debian)
-
-#### Docker secrets
-https://docs.docker.com/engine/reference/commandline/secret/
-
-* List secrets ```docker secret ls```
-* Create secret from stdin ```echo "SDFDSF" | docker secret create test -```
-* Create secret from file ```docker secret create nats-server.key nats-server.key```
-
-
-
-#### Docker swarm CLI command primer
-* Observing Docker events ```curl --unix-socket /var/run/docker.sock http://localhost/events```
-* List machines in cluster ```docker node ls```
-* Create a network ```docker network create --driver overlay --scope swarm webgateway```
-* List stacks ```docker stack ls``` _Note: A stack is actually a docker-compose.yml_
-* Deploy a docker-config.yml ```docker stack deploy -c docker-compose.yml haswarm```
-* List services ```docker service ls```
-* Inspect logs of a container ```docker service logs haswarm_traefik_init -f``` (-f = follow, or update in realtime)
-* Update a container definition ```docker service update haswarm_traefik_init --force```
-* Examine container processes ```docker service ps haswarm_traefik_init```
-* Remove a stack ```docker stack rm haswarm```
-* Check container stats ```docker stats haswarm_traefik_init```
-* Update a docker container in place ```docker commit ....```
-* Enter machine ```docker exec -it 9ac bash```
-* Inpsect network ```docker network inspect webgateway```, may want or need to ```sysctl net.ipv4.conf.all.forwarding=1``` (https://docs.docker.com/network/bridge/)
-* **Scale** ```docker service scale haswarm_traefik_init=10```
-* Save a container to a tar ```docker save -o <path for generated tar file> <image name>```
-* Load a container into a docker instance ```docker load -i <path to image tar file>```
-* Force a stack group of replicas to reload ```docker service update --force haswarm_traefik```
-* Promote a node to a manager (one remains the leader using raft) ```docker node promote docker1``` or ```docker node update docker-1 --role manager```
-* Retrieve a clusterfucked cluster with a dead manager ```docker swarm init  --force-new-cluster ...```
-* Options to specify an IP address binding when publishing ports ```docker network create -o "com.docker.network.bridge.host_binding_ipv4"="172.19.0.1" simple-network``` (https://docs.docker.com/engine/reference/commandline/network_create/)
-* Remove a node from a swarm
-```
-#Demote the affected node to a worker
-#Move /var/lib/docker/swarm out of the way on the affected node
-#Join again using docker swarm join
-#Delete old the node entry (docker node rm) afterwards, to clean up the node list.
-```
 
 ## TODO
 - [ ] Auto update dns if down
