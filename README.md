@@ -195,6 +195,7 @@ https://docs.docker.com/engine/reference/commandline/secret/
 
 
 #### Docker swarm CLI command primer
+* Observing Docker events ```curl --unix-socket /var/run/docker.sock http://localhost/events```
 * List machines in cluster ```docker node ls```
 * Create a network ```docker network create --driver overlay --scope swarm webgateway```
 * List stacks ```docker stack ls``` _Note: A stack is actually a docker-compose.yml_
