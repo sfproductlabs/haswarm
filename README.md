@@ -8,7 +8,7 @@ My notes after trying to use consul, traefik for docker swarm. This is **not rec
 * Deploy the stack onto your swarm using [deploy.sh](https://github.com/dioptre/haswarm/blob/master/deploy.sh).
 
 ### Docker swarm execution options
-* Use [roo](https://github.com/sfproductlabs/roo)
+* Use [roo](https://github.com/sfproductlabs/roo) to automate deployment of multiple hosts on a docker swarm. It is a reverse proxy implementing lets encrypt (acme) using its own distributed kv store (using raft), and scans your swarm config and shares it with the worker nodes.
 * Traefik in their infinite wisdom removed functionality for their premium version. Do not use it. ~~Run traefik on only manager nodes (https://docs.traefik.io/providers/docker/#docker-api-access_1) or share the nodes docker socket (https://github.com/Tecnativa/docker-socket-proxy). ~~
 * ~~**OR** use consul to configure the nodes~~
 
