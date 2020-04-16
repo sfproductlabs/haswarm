@@ -1,5 +1,5 @@
 # High Availabilty Docker Swarm Config
-Using consul, traefik, docker swarm. This is recommended for **PUBLIC** swarms only. Setup another swarm for your intranet applications, or at least improve the firewall configuration as per below.
+My notes after trying to use consul, traefik for docker swarm. This is **not recommended**. [Use my new project instead](https://github.com/sfproductlabs/roo).
 
 ## TL;DR
 * Update the [docker-compose.yml](https://github.com/dioptre/haswarm/blob/master/docker-compose.yml) docker swarm/stack to suit your infrastructure.
@@ -104,7 +104,7 @@ OK
 ```wget https://releases.hashicorp.com/consul/1.7.2/consul_1.7.2_linux_amd64.zip```
 
 #### Note
-* No more than 5 servers per datacenter
+* No more than 5 servers per datacenter https://www.consul.io/docs/agent/options.html#_server
 * Get key ```curl http://127.0.0.1:8500/v1/kv/traefik/consul/```
 * Put key (no data/null) ```curl --request PUT http://127.0.0.1:8500/v1/kv/traefik/consul/```
 * Put key (with data/json) ```curl --request PUT http://127.0.0.1:8500/v1/kv/traefik/consul/watch -H 'Content-Type: application/json' -d 'true'```
